@@ -2,7 +2,8 @@
 
 Vietnambis.com is a corporate information site in Vietnam。
 
-Demo：[https://vietnambis.com](https://vietnambis.com)
+Demo Vietnamese：[https://vietnambis.com](https://vietnambis.com)
+Demo English：[https://vietnambis.com/en](https://vietnambis.com/en)
 
 ## Note
 
