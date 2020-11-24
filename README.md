@@ -19,6 +19,7 @@ npm install --save nuxt@2.14.7
 
 ## Technology stack
 
+```
 Vue.js
 Nuxt.js
 ElasticSearch
@@ -29,7 +30,7 @@ Webpack
 Mysql
 Node.js
 Express.js
-
+```
 ## How to run
 
 ```
