@@ -1,0 +1,130 @@
+.container {
+  max-width: 1000px; 
+  margin-bottom: 10px;
+}
+.button {
+  border-radius: 100px;
+}
+.section {
+  padding: 2rem 0 2rem;  
+}
+.section-heading,
+.section-description {
+  margin-bottom: 1.2rem;
+}
+.values {  
+  background-size: cover;
+  color: #fff;
+  padding-bottom: 5rem;
+}
+.value-multiplier {
+  margin-bottom: .5rem;
+  color: #11DFC7;
+}
+.value-heading {
+  margin-bottom: .3rem;
+}
+.value-description {
+  opacity: .8;
+  font-weight: 300;
+}
+.title-header
+{    
+    font-size: 1.4rem;
+    letter-spacing: .2rem;
+    font-weight: 400;
+    margin-top: 10px;
+}
+.get-help {
+  border-bottom: 1px solid #ddd;
+}
+.categories { 
+  background-size: cover;
+  color: #fff;
+}
+.categories .section-description { 
+  margin-bottom: 4rem;
+}
+.navbar .links .search-box {
+  flex: 0 0 auto;
+  vertical-align: top;
+}
+.search-box
+{
+  display: flex;
+  padding: 10px 0;
+}
+.search-box input {
+  cursor: text;
+  width: 20rem;
+  height: 3rem;
+  color: #4e6e8e;
+  display: inline-block;
+  border: 1px solid #cfd4db;
+  border-radius: 2rem;
+  font-size: .9rem;
+  line-height: 2rem;
+  padding: 0 1rem 0 3rem;
+  outline: none;
+  transition: all .2s ease;
+  background: #fff url(~assets/img/search.svg) .6rem .6rem no-repeat;
+  background-size: 2rem;
+}
+.category
+{
+  padding: 40px 0;
+}
+.category h2
+{
+  color: #fc771f;
+  font-size: 24px;
+}
+.main-category
+{
+  -moz-column-count: 4;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 4;
+    -webkit-column-gap: 20px;
+    column-count: 2;
+    column-gap: 20px;
+    padding: 20px 0;
+}
+.main-category a{
+  color: #eaf4f7;
+}
+.color-blue
+{
+  background-color: #0068a1;
+}
+@media (min-width: 550px) {
+  .section {
+    padding: 2rem 0 4rem;
+  }  
+}
+.clear{margin: 10px 0;}
+
+.breadcrumbs
+{
+  padding: 10px 0 2px 0;
+  font-size: 14px;
+  color: #9f9f9f;
+  margin: 4px 0 0 0;
+}
+
+/* Bigger than 750 */
+@media (min-width: 750px) { 
+  .section-description {
+    max-width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+  }  
+  .categories {
+    padding: 15rem 0 8rem;
+  }
+}
+@media (min-width: 1000px) {
+  .section {
+    padding: 4px 0 4px;
+    margin: 20px 0 0 0;
+  } 
+}
