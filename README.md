@@ -1,98 +1,99 @@
 # vietnambis.com
 
-以前的博客使用的是Ghost，不过被攻击了，勒索我几百美元，还是算了吧，顺便说一句，数据备份很重要！前段时间学了Vue.js，以前看的Node还能记起来点，主要为了锻炼自己吧，这次的博客没有用Hexo，Ghost什么的，自己写的。由于有SEO的需求，毕竟自己写自己看也没什么意思，最终的使用的技术方案：Vue.js+Nuxt.js+ES6+Webpack+Mysql+Node.js+Express.js。动手之前其实还有很多东西不是很熟，不过最终也算是完成了，这个项目给了我一个启发：实践是学习的最快途径，看再多次文档真不如动手写一个项目来的实在。
+Vietnambis.com is a corporate information site in Vietnam。
 
-博客：[使用Nuxt+Vue+Node构建的SSR博客项目](http://www.justyeh.top/post/29)
+Demo：[https://vietnambis.com](https://vietnambis.com)
 
-## 注意
+## Note
 
-最近Nuxt官方将版本升级到了rc6，我的项目开发的时候最新版本是rc3，很抱歉的是rc3和rc6有冲突，导致了项目不能运行，现在已知的报错有：
+Recently, Nuxt officially upgraded the version to 2.14.7
 
-```
-Same thing here pretty much : UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 1): TypeError: __WEBPACK_IMPORTED_MODULE_2_nuxt___default.a is not a constructor
-```
 
-这个问题就是版本不对导致的，你可以通过安装指定版本来解决
+
+Add nuxt to Vue project
 
 ```
-npm install --save nuxt@1.0.0-alpha.3
+npm install --save nuxt@2.14.7
 ```
 
-鉴于我的博客是稳定运行的，所以目前我不会升级nuxt的版本，如果有遇到版本相关的问题，大家可以多关注官方的[issue](https://github.com/nuxt/nuxt.js/issues)，很多问题在上面可以搜到。
+## Technology stack
 
+Vue.js
+Nuxt.js
+ElasticSearch
+redis
+Firebase
+Es6
+Webpack
+Mysql
+Node.js
+Express.js
 
-
-## 技术栈
-
-Vue.js+Nuxt.js+Es6+Webpack+Mysql+Node.js+Express.js
-
-## 运行
+## How to run
 
 ```
-#安装依赖
+#Installation dependencies
 npm install
 
-#开发环境
+#Development environment
 npm run dev
 
-#生产环境
+#Production Environment
 npm run build
 npm start
 
 #pm2
 npm run build
-pm2 start npm --name 'justyeh.com' -- start
+pm2 start npm --name 'vietnambis.com' -- start
 
-#运行地址
+#Operating address
 http://localhost:3000
 ```
 
 
 
-## 数据库文件
-
-数据库文件放在database目录下：
+## Database file
 
 database：database.sql
 
-tables:justyeh.sql
+tables:vietnambis.sql
 
-## 目录结构
+## Directory Structure
 ```
-/justyeh/justyeh.com/
-├── assets                              资源目录 assets 用于组织未编译的静态资源如 LESS、SASS 或 JavaScript
-├── backpack.config.js                  后台入口配置文件
-├── build                               打包后的文件
-├── components                          存放组件，用于组织应用的 Vue.js 组件
-│   ├── admin                           后台相关的组件
+/vietnambis.com/
+├── assets                              Asset directory assets is used to organize uncompiled static resources such as LESS, SASS or JavaScript
+├── backpack.config.js                  Background entry configuration file
+├── build                               Packaged files
+├── components                          Store components, Vue.js components used to organize applications
+│   ├── admin                           Backend related components: Using Element UI Template
 │   ├── ....
-├── database                            存放数据库文件的目录（自己添加）
-├── layouts                             布局模板文件，默认default，通过为页面设置layout更改
+├── database                            Directory for storing database files (add it yourself)
+├── layouts                             Layout template file, default, change by setting layout for the page
 │   ├── ....
-├── middleware                          存放应用的中间件
-├── node_modules                        Node依赖文件
-├── nuxt.config.js                      Nuxt主配置文件
-├── pages                               存放页面的目录
-│   ├── index.vue                       首页
+├── middleware                          Middleware for storing applications
+├── node_modules                        Node Dependent files
+├── nuxt.config.js                      Nuxt config file
+├── pages                               Directory for storing pages
+│   ├── index.vue                       Home
 │   ├── ....
-├── plugins                             存放插件，用于组织那些需要在 根vue.js应用 实例化之前需要运行的 Javascript 插件
+├── plugins                             Store plug-ins, used to organize those Javascript plug-ins that need to be run before the root vue.js application is instantiated
 │   └── axios.js
 ├── README.md                           README
-├── server                              express后台目录
-│   ├── index.js                        后台入口文件
+├── server                              express Backend directory
+│   ├── index.js                        Backstage entry file
 │   ├── ....
-├── static                              静态文件目录,此类文件不会被 Nuxt.js 调用 Webpack 进行构建编译处理。 服务器启动的时候，该目录下的文件会映射至应用的根路径 / 下
-└── util                                存放一些工具文件（自己添加）
+├── static                              Static file directory. Such files will not be called by Nuxt.js to build and compile. When the server starts, the files in this directory will be mapped to the application root path /
+└── util                                Store some tool files (add it yourself)
 ```
 
-## 参考资料
+## References
 
-[Vue.js](https://cn.vuejs.org/)
+[Vue.js](https://vuejs.org/)
 
-[Vue Router](https://router.vuejs.org/zh-cn/)
+[Vue Router](https://router.vuejs.org)
 
-[Nuxt.js](https://zh.nuxtjs.org/)
+[Nuxt.js](https://nuxtjs.org/)
 
-[express](http://www.expressjs.com.cn/)
+[express](http://www.expressjs.com/)
 
-[Node-MySQL](http://www.oschina.net/translate/node-mysql-tutorial?utm_source=tuicool&utm_medium=referral)
+[MySQL](https://www.mysql.com/)
