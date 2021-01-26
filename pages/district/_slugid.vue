@@ -3,13 +3,21 @@
     <div class="breadcrumbs"><span><a href="https://vietnambis.com">Home</a></span>  » <span><a :href="'https://vietnambis.com/province/'+district.province_slug + '-' + district.province_id">{{district.province_name}}</a></span>  » <span>{{district.district_name}} district / town</span> </div>
     <div class="section">
     <div class="nine columns">      
-      <div class="title"><h1> {{district.full_district_name}}, {{district.province_name}}</h1></div>
+      <div class="title"><h1>{{this.count}} Companies and Enterprises in {{district.full_district_name}}, {{district.province_name}}</h1></div>
       <div class="info">
-        <p>District name: {{district.full_district_name}}</p>
+        <p>District name: {{district.full_district_name}}, {{district.province_name}}</p>
       </div>
       <div class="content">
-        <business-list :businesses="businesses"></business-list>
-        <vue-page :total="count" :page="page" :path="'/district/'+district.slug+'-'+district.id+'/'" model="link"></vue-page>
+        <business-list :businesses="businesses"></business-list>        
+        <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        :first-link="'/district/'+district.slug+'-'+district.id"
+        :link="'/district/'+district.slug+'-'+district.id"
+        linkPath="/"        
+      ></nuxt-pager>
       </div>    
       </div>
       <div class="three columns">
@@ -20,33 +28,10 @@
 </template>
 <script>
 import axios from 'axios'
-//import timeago from 'timeago.js'
-//import hljs from 'highlight.js'
 import CommuneList from '~/components/CommuneList'
 import BusinessList from '~/components/BusinessList'
-import VuePage from '~/components/VuePage'
-
-// let marked = require('marked');
-
-// marked.setOptions({
-//   renderer: new marked.Renderer(),
-//   gfm: true,
-//   tables: true,
-//   breaks: false,
-//   pedantic: false,
-//   sanitize: false,
-//   smartLists: true,
-//   smartypants: false,
-//   highlight: function (code) {
-//     return hljs.highlightAuto(code).value;
-//   }
-// });
-
+import NuxtPager from '~/components/NuxtPager'
 export default {
-//   validate({ params }) {
-//     return /^\d+$/.test(params.id)
-//   },
-
   async asyncData({ params, error }) {        
     var n = params.slugid.lastIndexOf("-");
     var id = params.slugid.substring(n+1,params.slugid.lenght);  
@@ -70,19 +55,33 @@ export default {
     }    
   },
   components: {
-    VuePage,
+    NuxtPager,
     BusinessList,
     CommuneList
   },
   head() {
     return {
+      htmlAttrs: {
+      lang: 'en'
+      },
       title: this.title,
       meta: [
-        { hid: 'description', name: 'description', content: 'This page lists all businesses in '+this.district.full_district_name+ ', ' +this.district.province_name+ '. ' + + this.count + ' company profiles' },
-        { name: 'keywords', content: this.keywords.join(',') }
+        { hid: 'description', name: 'description', content: this.description},
+        { name: 'keywords', content: this.keywords.join(',') },
+        { property: 'og:url', content: this.fullurl },
+        { property: 'og:title', content: this.title},
+        { property: 'og:description', content: this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'},
+        { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: this.fullurl },
+        { name: 'twitter:title', content:this.title},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
       ],
       link:[
-        {rel:'canonical', href:'https://vietnambis.com/district/'+this.district.slug+'-'+this.district.id}
+        {rel:'canonical', href: this.fullurl}
       ]
     }
   },
@@ -94,10 +93,28 @@ export default {
     title()
     {
       if(this.page > 1){
-        return this.district.full_district_name + ' | Page ' + this.page
+        return this.count + ' Companies and Enterprises in ' + this.district.full_district_name + ', ' +this.district.province_name+' province/city | Page ' + this.page
       }else
       {
-        return this.district.full_district_name + ' '
+        return this.count + ' Companies and Enterprises in ' + this.district.full_district_name+ ', ' +this.district.province_name +' province/city'
+      }
+    },
+    description()
+    {
+      if(this.page > 1){
+        return 'All businesses in '+this.district.full_district_name+ ', ' +this.district.province_name+ ' province/city. We have ' + this.count + ' company and enterprise profiles in our database | Page ' + this.page
+      }else
+      {
+        return 'All businesses in '+this.district.full_district_name+ ', ' +this.district.province_name+ ' province/city. We have ' + this.count + ' company and enterprise profiles in our database'
+      }
+    },
+    fullurl()
+    {
+      if(this.page > 1){
+        return 'https://vietnambis.com/district/'+this.district.slug+'-'+this.district.id +'/' + this.page
+      }else
+      {
+        return 'https://vietnambis.com/district/'+this.district.slug+'-'+this.district.id
       }
     }
   }

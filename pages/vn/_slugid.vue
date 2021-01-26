@@ -39,8 +39,8 @@
         <p>
           Tags: <a :href="`https://vietnambis.com/vn/${business.vnslug}-${business.id}.html`">{{business.vietnamese_name}}</a>, <a :href="`https://vietnambis.com/vn/${business.vnslug}-${business.id}.html`">{{business.tax_id}}</a>, <a v-if="business.commune_id" :href="`https://vietnambis.com/vn/xa/${business.commune_slug}-${business.commune_id}`">{{business.commune_vietnamese_name}}</a>,
           <a v-if="business.district_id" :href="`https://vietnambis.com/vn/huyen/${business.district_slug}-${business.district_id}`">{{business.district_vietnamese_name}}</a>,
-           <a v-if="business.province_id" :href="`https://vietnambis.com/vn/tinh/${business.province_slug}-${business.province_id}`">{{business.province_vietnamese_name}}</a>,
-           <a v-if="business.district_id" :href="`https://vietnambis.com/vn/doanh-nghiep/quan-huyen/${business.district_id}-${business.district_slug}/ngay${business.established_date}/1`">{{business.district_vietnamese_name}} ngày {{business.vn_established_date}}</a>,
+           <a v-if="business.province_id" :href="`https://vietnambis.com/vn/tinh/${business.province_slug}-${business.province_id}`">{{business.province_vietnamese_name}}</a>
+           <!-- <a v-if="business.district_id" :href="`https://vietnambis.com/vn/doanh-nghiep/quan-huyen/${business.district_id}-${business.district_slug}/ngay${business.established_date}/1`">{{business.district_vietnamese_name}} ngày {{business.vn_established_date}}</a>, -->
         </p>
       </div>
     </div> 
@@ -132,6 +132,9 @@ export default {
   },
   head() {
     return {
+      htmlAttrs: {
+      lang: 'vi'
+      },
       title: this.business.full_name +' - '+ this.business.tax_id,
       meta: [
         { hid: 'description', name: 'description', content: this.description },
@@ -139,12 +142,14 @@ export default {
         { name: 'twitter:card', value: 'summary' },
         { name: 'twitter:url', content: 'https://vietnambis.com/vn/' + this.business.vnslug + '-'+this.business.id+'.html' },
         { name: 'twitter:title', content:this.business.english_name +' - ' + this.business.tax_id},
+        { name: 'twitter:description', content:this.description},
         { name: 'twitter:site', content:'@vietnambis'},
         { name: 'twitter:creator', content:'@vietnambis'},
         { property: 'og:url', content: 'https://vietnambis.com/vn/' + this.business.vnslug + '-'+this.business.id+'.html' },
         { property: 'og:title', content:this.business.full_name +' - ' + this.business.tax_id},
         { property: 'og:description', content:this.description},
-        { property: 'og:type', content:'article'}
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
       ],
       link:[
         {rel:'canonical', href:'https://vietnambis.com/vn/' + this.business.vnslug + '-'+this.business.id+'.html'}

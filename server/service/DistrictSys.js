@@ -4,29 +4,11 @@ let async = require('async')
 let districtModel = new District();
 
 let getDistricts = callback => {
-    provinceModel.list((err, districts) => {
-        // if (err) {
-        //     return callback({ code: 404, message: 'no result' });
-        // }
-
-        // async.eachSeries(tags, (tag, countCallback) => {
-        //     postTagModel.postCountByTagId(tag.id, (err, count) => {
-        //         if (err) {
-        //             return countCallback(err)
-        //         }
-        //         tag.postNum = count;
-        //         countCallback()
-        //     });
-        // }, (err) => {
-        //     if (err) {
-        //         return callback({ code: 404, message: 'no result' });
-        //     }
-        //     callback({ code: 404, message: 'success', list: tags });
-        // });
+    districtModel.list((err, districts) => {        
         if (err) {
             return callback({ code: 404, message: err + '- no result' });
          }
-        callback({ code: 404, message: 'success', list: districts });
+        callback({ code: 200, message: 'success', list: districts });
     });
 }
 

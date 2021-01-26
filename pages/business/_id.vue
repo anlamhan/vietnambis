@@ -5,8 +5,7 @@
       <search :provinces="provinces"></search>
     </div>
     <div class="section">
-        <div class="nine columns">
-        <!-- <business-list :businesses="businesses"></business-list> -->
+        <div class="nine columns">        
         <transition-group name="list" tag="section">
      <article v-for="business in businesses" :key="business.english_name">   
        <a :href="`https://vietnambis.com/${business.slug}-${business.id}.html`">{{ business.english_name }}</a>                    
@@ -14,8 +13,16 @@
         <div class="desc">{{business.english_address}}</div>            
       </article> 
   </transition-group>
-
-        <vue-page :total="count" :page="page" path="/business/" model="link"></vue-page>
+ <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        first-link="/business"
+        link="/business"
+        linkPath="/"                
+      ></nuxt-pager>
+        
         </div>
     </div>
 </div> 
@@ -23,7 +30,7 @@
 <script>
 import axios from 'axios'
 import Search from '~/components/Search'
-import VuePage from '~/components/VuePage'
+import NuxtPager from '~/components/NuxtPager'
 import BusinessList from '~/components/BusinessList'
 
 export default {  
@@ -46,31 +53,64 @@ export default {
     },
     components: {    
     Search,
-    VuePage,
+    NuxtPager,
     BusinessList
   },
   head() {
     return {
+       htmlAttrs: {
+      lang: 'en'
+      },
        title: this.title,
        meta: [
-         { hid: 'description', name: 'description', content: 'Search Vietnam businesses on Vietnambis.com. Find the business listings information with tax, address, email and more.' },
-         { name: 'keywords', content: 'vietnam bis, vietnam business' }
+         { hid: 'description', name: 'description', content: this.description },
+         { name: 'keywords', content: 'vietnam bis, vietnam business' },
+         { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: 'https://vietnambis.com/business/'+ this.page },
+        { name: 'twitter:title', content: 'Top '+ this.count + ' companies, businesses in Vietnam '+ '| Page ' + this.page},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
+        { property: 'og:url', content: 'https://vietnambis.com/page/' + this.page },
+         { property: 'og:title', content: 'Top '+ this.count + ' companies, businesses in Vietnam '+ '| Page ' + this.page},
+         { property: 'og:description', content:this.description},
+         { property: 'og:type', content:'article'},
+         { property: 'og:site_name', content:'Vietnam BIS'},
        ],       
       link:[
         {rel:'canonical', href:'https://vietnambis.com/business'}
       ]
      }
   },
-  computed: {  
+  computed: {      
   title()
     {
       if(this.page > 1){
-        return 'Find a Business, Taxcode' + ' | Page ' + this.page
+        return 'Top ' + this.count + ' outstanding Companies, Enterprises in Vietnam | Page ' + this.page
       }else
       {
-        return 'Find a Business, Taxcode'
+        return 'Top ' + this.count + ' outstanding Companies, Enterprises in Vietnam'
       }
-    }  
+    },
+    fullurl()
+    {
+      if(this.page > 1){
+        return 'https://vietnambis.com/business/'+ this.page
+      }
+      else
+      {
+        return 'https://vietnambis.com/business'
+      }
+    },
+    description(){
+      if(this.page > 1)
+      {
+      return this.count + ' outstanding company profiles in our database.' + ' Find company, business information in Vietnam, Vietnam directory | page ' + this.page
+      }
+      else{
+        return this.count + ' outstanding company profiles in our database.' + ' Find company, business information in Vietnam, Vietnam directory'
+      }
+    }
    
   }  
 }

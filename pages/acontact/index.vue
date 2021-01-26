@@ -3,44 +3,108 @@
       <div class="breadcrumbs"><span><a href="https://vietnambis.com">Home</a></span>  » <span>Contact</span> </div>
     <div class="section">
         <div class="row">
-          <div class="title"><h1>Contact Us</h1></div>
+          <div class="title"><h1>Contact Us (vietnambis1@gmail.com)</h1></div>
         </div>
-        <form>
-          <div class="row">
-            <div class="six columns">
-              <label for="exampleEmailInput">Your email</label>
-              <input class="u-full-width" type="email" placeholder="your@mail.com" id="txtEmailInput">
-            </div>
-            <div class="six columns">
-              <label for="exampleRecipientInput">Reason for contacting</label>
-              <select class="u-full-width" id="exampleRecipientInput">
-                <option value="Option 1">Questions</option>
-                <option value="Option 2">Admiration</option>
-                <option value="Option 3">Can I get your number?</option>
-              </select>
-            </div>
-          </div>
-          <label for="exampleMessage">Message</label>
-          <textarea class="u-full-width" placeholder="Hi Dave &hellip;" id="exampleMessage"></textarea>
-          <label class="example-send-yourself-copy">
-            <input type="checkbox">
-            <span class="label-body">Send a copy to yourself</span>
-          </label>
-          <input class="button-primary" type="submit" value="Submit">
-        </form>
+        <form @submit.prevent="sendEmail">
+          <label>Name</label>
+          <input class="u-full-width"
+            type="text" 
+            v-model="name"
+            name="name"
+            placeholder="Your Name"
+          >
+          <label>Email</label>
+          <input class="u-full-width"
+            type="email" 
+            v-model="email"
+            name="email"
+            placeholder="Your Email"
+            >
+          <label>Message</label>
+          <textarea class="u-full-width"
+            name="message"
+            v-model="message"
+            cols="30" rows="5"
+            placeholder="Message">
+          </textarea>
+           <input type="submit" value="Send">
+  </form>
     </div>
     </div>
 </template>
-<script>
+<style scoped>
+* {box-sizing: border-box;}
 
- export default {
-     head() {
-     return {
-       title: 'Contact Us',
-       meta: [
-         { hid: 'description', name: 'description', content: 'If you have questions about VietnamBis.com, please send us a message by filling out the form below' }         
-       ]
-     }
-   }
- }
+/* .container {
+  display: block;
+  margin:40px auto;
+  text-align: center;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  width: 100%;
+} */
+
+label {
+  float: left;
+}
+
+input[type=text], [type=email], textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;  
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+</style>
+<script>
+import emailjs from 'emailjs-com';
+export default {
+  
+  data() {
+    return {
+      name: '',
+      email: '',
+      message: ''
+    }
+  },
+  methods: {
+    sendEmail(e) {
+      try {
+        emailjs.sendForm('service_vietnambis1', 'template_8gqyw7e', e.target,
+        'user_5OW9TF31FOI2b3TTFzMzY', {
+          name: this.name,
+          email: this.email,
+          message: this.message
+        }).then((result) => {
+            console.log('SUCCESS!', result.status, result.text);
+            alert("Thank you!");
+        }, (error) => {
+            console.log('FAILED...', error);
+        });
+      } catch(error) {
+          console.log({error})
+      }
+      // Reset form field
+      this.name = ''
+      this.email = ''
+      this.message = ''
+    },
+  }
+}
 </script>

@@ -26,10 +26,29 @@
 
 <script>
 
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import { getUserFromCookie, getUserFromSession } from '@/store/auth/cookie'
 export default {
-  // eslint-disable
   name: 'Dashboard',
   layout: 'admin',
+  asyncData({ req, redirect }) {
+    if (process.server) {
+      console.log('server', req.headers)
+      const user = getUserFromCookie(req)
+      //   console.log('b', getUserFromCookie(req))
+      if (!user) {
+        console.log('redirecting server')
+        redirect('admin/login')
+      }
+    } else {
+      var user = firebase.auth().currentUser
+      if (!user) {
+        redirect('admin/login')
+      }
+      //   console.log($nuxt.$router)
+    }
+  }
 }
 </script>
 

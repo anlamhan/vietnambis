@@ -29,7 +29,7 @@
 
     <p>
       Email：
-      <a href="mailto:admin@vietnambis.com">admin@vietnambis.com</a>
+      <a href="mailto:vietnambis1@gmail.com">vietnambis1@gmail.com</a>
     </p>
     <p>
       Website:

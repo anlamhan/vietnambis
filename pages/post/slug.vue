@@ -21,7 +21,8 @@
 <script>
 import axios from 'axios'
 import timeago from 'timeago.js'
-import hljs from 'highlight.js'
+//import hljs from 'highlight.js'
+//import hljs from 'highlight.js/lib/highlight.js'
 let marked = require('marked');
 
 marked.setOptions({
@@ -33,17 +34,19 @@ marked.setOptions({
    sanitize: false,
    smartLists: true,
    smartypants: false,
-   highlight: function (code) {
-     return hljs.highlightAuto(code).value;
-   }
+  //  highlight: function (code) {
+  //    return hljs.highlightAuto(code).value;
+  //  }
  });
 
 export default {
   layout: 'vn',
   asyncData({ params, error }) {  
     //console.log(params.slug);
-    var n = params.slug.lastIndexOf(".");
-    var slug = params.slug.substring(0,n);
+    var n = params.slug == undefined ? '' : params.slug.lastIndexOf(".");
+    var slug = params.slug == undefined ? '' : params.slug.substring(0,n);
+    if(slug=='tra-cuu-ma-so-thue-ca-nhan-tncn'|| slug=='cach-tra-cuu-ma-so-thue-doanh-nghiep')
+    {
     var host = process.env.baseUrl;        
     return axios.get(`${host}/api/post/detailBySlug/` + slug).then((res) => {
       
@@ -52,11 +55,29 @@ export default {
       }
       
       var post = res.data.list[0];      
+      console.log(post)
       post.html = marked(post.markdown);      
-      return { post }
+      return { post, slug }
     }).catch((err) => {
       error({ statusCode: 404, message: err.message })
     })
+    }
+    else
+    {
+      return axios.get(`http://localhost:1337/posts?slug=` + slug).then((res) => {
+      
+      if (res.data.code === 404) {
+        error({ statusCode: 404, message: 'Not Found This Post' });
+      }
+      
+      var post = res.data[0];      
+      post.html = marked(post.content);
+      return { post, slug }
+    }).catch((err) => {
+      error({ statusCode: 404, message: err.message })
+    })
+    
+    }
   },
   head() {
     return {
@@ -70,9 +91,20 @@ export default {
   computed: {
     keywords() {
       let keywords = [];
-      this.post.tags.forEach(function (element) {
-        keywords.push(element.name)
-      });
+       if(this.slug=='tra-cuu-ma-so-thue-ca-nhan-tncn'|| this.slug=='cach-tra-cuu-ma-so-thue-doanh-nghiep')
+     {
+       this.post.tags.forEach(function (element) {
+         keywords.push(element.name)
+       });
+     }
+     else
+     {
+      //  this.post.categories.forEach(function (element) {
+      //    keywords.push(element.name)
+      //  });
+      console.log(this.post.content);
+      return keywords
+     }
       return keywords
     }
   }

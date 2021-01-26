@@ -3,13 +3,23 @@
     <div class="breadcrumbs"><span><a href="https://vietnambis.com/vn">Trang chủ</a></span>  » <span>{{industry.industry_name}}</span></div>
     <div class="section">
     <div class="nine columns">      
-      <div class="title"><h1> {{industry.code}} - {{industry.industry_name}}</h1></div>
+      <div class="title"><h1>Ngành nghề: {{industry.code}} - {{industry.industry_name}}</h1></div>
       <div class="info">
-        <p>Tên ngành nghề kinh doanh: {{industry.industry_name}}</p>
+        <p>Tên ngành nghề kinh doanh: {{industry.industry_name}}. Có {{this.count}} hồ sơ công ty, doanh nghiệp</p>
       </div>
       <div class="content">
-        <business-list :businesses="businesses"></business-list>
-        <vue-page :total="count" :page="page" :path="'/vn/nganh/'+industry.vnslug+'-'+industry.id+'/'" model="link"></vue-page>
+        <business-list :businesses="businesses"></business-list>        
+         <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        :first-link="'/vn/nganh/'+industry.vnslug+'-'+industry.id"
+        :link="'/vn/nganh/'+industry.vnslug+'-'+industry.id"
+        linkPath="/"
+        prevPageText="Trang trước"
+        nextPageText="Trang tiếp theo"
+      ></nuxt-pager>
       </div>    
       </div>
       <div class="three columns">      
@@ -21,7 +31,7 @@
 import axios from 'axios'
 import CommuneList from '~/components/vn/CommuneList'
 import BusinessList from '~/components/vn/BusinessList'
-import VuePage from '~/components/vn/VuePage'
+import NuxtPager from '~/components/NuxtPager'
 
 export default {
   layout: 'vn',
@@ -46,18 +56,32 @@ export default {
     }    
   },
   components: {
-    VuePage,
+    NuxtPager,
     BusinessList    
   },
   head() {
     return {
+      htmlAttrs: {
+      lang: 'vi'
+      },
       title: this.title,
       meta: [
-        { hid: 'description', name: 'description', content: 'Tất cả công ty và doanh nghiệp thuộc ngành: ' + this.industry.code + ' - '+this.industry.industry_name },
-        { name: 'keywords', content: this.keywords.join(',') }
+        { hid: 'description', name: 'description', content: this.description },
+        { name: 'keywords', content: this.keywords.join(',') },
+        { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: this.fullurl },
+        { name: 'twitter:title', content:this.title},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
+        { property: 'og:url', content: this.fullurl },
+        { property: 'og:title', content: this.title},
+        { property: 'og:description', content:this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
       ],
       link:[
-        {rel:'canonical', href:'https://vietnambis.com/vn/nganh/'+this.industry.vnslug+'-'+this.industry.id}
+        {rel:'canonical', href:this.fullurl}
       ]
     }
   },
@@ -69,10 +93,23 @@ export default {
     title()
     {
       if(this.page > 1){
-        return this.industry.code + ' - ' +this.industry.industry_name + ' | Trang ' + this.page
+        return this.count +' doanh nghiệp ' +this.industry.industry_name +' - '+ this.industry.code +' | Trang ' + this.page
       }else
       {
-        return this.industry.code + ' - ' +this.industry.industry_name
+        return this.count +' doanh nghiệp ' +this.industry.industry_name +' - '+ this.industry.code
+      }
+    },
+    description()
+    {
+      return 'Tất cả công ty và doanh nghiệp thuộc ngành: ' + this.industry.code + ' - '+this.industry.industry_name
+    },
+    fullurl()
+    {
+      if(this.page > 1){
+        return 'https://vietnambis.com/vn/nganh/'+this.industry.vnslug+'-'+this.industry.id +'/' + this.page
+      }else
+      {
+        return 'https://vietnambis.com/vn/nganh/'+this.industry.vnslug+'-'+this.industry.id
       }
     }
   }

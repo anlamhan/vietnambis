@@ -6,7 +6,7 @@ let districtSys = require('../service/DistrictSys');
 
 router.get('/list', (req, res, next) => {
   try {
-    districtSys.getDistricts(result => res.json(result))
+    districtSys.getDistricts(result => res.json(result))    
   } catch (error) {
     res.json({ code: 500, message: 'Program error！' })
   }

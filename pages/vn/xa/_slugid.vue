@@ -4,13 +4,23 @@
    <span><a :href="'https://vietnambis.com/vn/tinh-thanh/'+commune.province_slug + '-' + commune.province_id">{{commune.vietnamese_province_name}}</a></span> » <span><a :href="'https://vietnambis.com/vn/huyen/'+commune.district_slug + '-' + commune.district_id">{{commune.vietnamese_district_name}} </a></span>  » <span>{{commune.vietnamese_name}}</span> </div>
     <div class="section">
     <div class="nine columns">      
-      <div class="title"><h1>{{commune.vietnamese_name}}, {{commune.vietnamese_district_name}}, {{commune.vietnamese_province_name}} </h1></div> 
+      <div class="title"><h1>Công ty tại {{commune.vietnamese_name}}, {{commune.vietnamese_district_name}}, {{commune.vietnamese_province_name}} <span v-if="this.page > 0"> | Trang {{this.page}}</span> </h1></div> 
       <div class="info">
-        <p>Tất cả công ty, doanh nghiệp thuộc : {{commune.vietnamese_name}}</p>
+        <p>Tất cả công ty, doanh nghiệp thuộc : {{commune.vietnamese_name}}, {{commune.vietnamese_district_name}}, {{commune.vietnamese_province_name}}</p>
       </div>
       <div class="content">
-        <business-list :businesses="businesses"></business-list>
-        <vue-page :total="count" :page="page" :path="'/vn/xa/'+commune.slug+'-'+commune.id+'/'" model="link"></vue-page>
+        <business-list :businesses="businesses"></business-list>        
+        <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        :first-link="'/vn/xa/'+commune.slug+'-'+commune.id"
+        :link="'/vn/xa/'+commune.slug+'-'+commune.id"
+        linkPath="/"
+        prevPageText="Trang trước"
+        nextPageText="Trang tiếp theo"
+      ></nuxt-pager>
       </div>
       </div>
       <div class="three columns">      
@@ -20,11 +30,8 @@
 </template>
 <script>
 import axios from 'axios'
-// import timeago from 'timeago.js'
-// import hljs from 'highlight.js'
 import BusinessList from '~/components/vn/BusinessList'
-import VuePage from '~/components/vn/VuePage'
-// import { resolve } from 'q'
+import NuxtPager from '~/components/NuxtPager'
 
 export default {
   layout: 'vn',
@@ -49,59 +56,64 @@ export default {
     }    
   },
   components: {
-    VuePage,
+    NuxtPager,
     BusinessList
   },
   head() {
     return {
+      htmlAttrs: {
+      lang: 'vi'
+      },
       title: this.title,
       meta: [
-        { hid: 'description', name: 'description', content: 'Tất cả công ty, doanh nghiệp thuộc '+this.commune.vietnamese_name +', '+ this.commune.vietnamese_district_name + '. Có '+ this.count +' hồ sơ'},
-        { name: 'keywords', content: this.keywords.join(',') }
+        { hid: 'description', name: 'description', content: this.description},
+        { name: 'keywords', content: this.keywords.join(',') },
+        { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: this.fullurl },
+        { name: 'twitter:title', content:this.title},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
+        { property: 'og:url', content: this.fullurl },
+        { property: 'og:title', content: this.title},
+        { property: 'og:description', content:this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
       ],
       link:[
-        {rel:'canonical', href:'https://vietnambis.com/vn/xa/'+this.commune.slug+'-'+this.commune.id}
+        {rel:'canonical', href:this.fullurl}
       ]
     }
   },
   computed: {
     keywords() {
-      let keywords = [this.commune.commune_name];     
+      let keywords = ['Công ty', 'Doanh nghiệp', this.commune.vietnamese_name, this.commune.vietnamese_district_name, this.commune.vietnamese_province_name, this.count +' hồ sơ'];     
       return keywords
-    },
-    category(){
-    let type = this.commune.category; 
-    switch(type) {
-  case 1:
-    return 'Ward'
-    break;
-  case 2:
-    return 'Commune'
-    break;
-    case 3:
-    return 'District'    
-    break;
-    case 4:
-    return 'Town'    
-    break;
-    case 5:
-    return 'District'    
-    break;
-  default:
-    return 'Commune'
-}
-  },
+    },    
   title()
     {
       if(this.page > 1){
-        return this.commune.vietnamese_name + ' | Trang ' + this.page
+        return this.count + ' doanh nghiệp tại ' + this.commune.vietnamese_name +', ' + this.commune.vietnamese_district_name + ', ' + this.commune.vietnamese_province_name + ' | Trang ' + this.page
       }else
       {
-        return this.commune.vietnamese_name
+        return this.count + ' doanh nghiệp tại ' + this.commune.vietnamese_name +', ' + this.commune.vietnamese_district_name + ', ' + this.commune.vietnamese_province_name        
       }
+    },
+    description()
+    {
+      return 'Tất cả công ty, doanh nghiệp thuộc '+this.commune.vietnamese_name +', '+ this.commune.vietnamese_district_name + ', ' + this.commune.vietnamese_province_name + '. Có '+ this.count +' hồ sơ'
     }
+    ,
+    fullurl()
+  {
+     if(this.page > 1){
+        return 'https://vietnambis.com/vn/xa/'+this.commune.slug+'-'+this.commune.id +'/' + this.page
+      }else
+      {
+        return 'https://vietnambis.com/vn/xa/'+this.commune.slug+'-'+this.commune.id
+      }
   }
-  
+  }  
 }
 </script>
 

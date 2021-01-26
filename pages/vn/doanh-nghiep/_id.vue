@@ -5,16 +5,25 @@
       <search :provinces="provinces"></search>
     </div>
     <div class="section">
-        <div class="nine columns">
-        <!-- <business-list :businesses="businesses"></business-list> -->
+        <div class="nine columns">        
         <transition-group name="list" tag="section">
      <article v-for="business in businesses" :key="business.english_name">   
        <a :href="`/vn/${business.vnslug}-${business.id}.html`">{{ business.full_name }}</a>                     
         <div class="desc">{{business.english_name}}</div>
         <div class="desc">{{business.vietnamese_address}}</div>            
       </article> 
-  </transition-group>
-        <vue-page :total="count" :page="page" path="/vn/doanh-nghiep/" model="link"></vue-page>
+  </transition-group>        
+        <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        first-link="/vn/doanh-nghiep"
+        link="/vn/doanh-nghiep"
+        linkPath="/"        
+        prevPageText="Trang trước"
+        nextPageText="Trang tiếp theo"
+      ></nuxt-pager>
         </div>
     </div>
 </div> 
@@ -22,8 +31,7 @@
 <script>
 import axios from 'axios'
 import Search from '~/components/vn/Search'
-import VuePage from '~/components/vn/VuePage'
-// import BusinessList from '~/components/BusinessList'
+import NuxtPager from '~/components/NuxtPager'
 
 export default {
     layout: 'vn',
@@ -45,16 +53,26 @@ export default {
     }
     },
     components: {    
-    Search,
-    VuePage,
-    // BusinessList
+    Search,    
+    NuxtPager
   },
   head() {
     return {
        title: this.title,
        meta: [
-         { hid: 'description', name: 'description', content: 'Tìm kiếm thông tin doanh nghiệp, công ty theo tên, mã số thuế, số giấy chứng nhận đăng ký kinh doanh tại Việt Nam' },
-         { name: 'keywords', content: 'vietnam bis, doanh nghiệp mới, mã số thuế, công ty' }
+         { hid: 'description', name: 'description', content: this.description },
+         { name: 'keywords', content: 'vietnam bis, doanh nghiệp mới, mã số thuế, công ty' },
+         { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: 'https://vietnambis.com/vn/doanh-nghiep' },
+        { name: 'twitter:title', content:this.title},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
+        { property: 'og:url', content: 'https://vietnambis.com/vn/doanh-nghiep' },
+        { property: 'og:title', content: this.title},
+        { property: 'og:description', content:this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
        ],
       link:[
         {rel:'canonical', href:'https://vietnambis.com/vn/doanh-nghiep'}
@@ -65,13 +83,21 @@ export default {
   title()
     {
       if(this.page > 1){
-        return 'Tìm thông tin doanh nghiệp, mã số thuế' + ' | Trang ' + this.page
+        return 'Top '+this.count +' công ty, doanh nghiệp nổi bật tại Việt Nam' + ' | Trang ' + this.page
       }else
       {
-        return 'Tìm thông tin doanh nghiệp, mã số thuế'
+        return 'Top '+this.count +' công ty, doanh nghiệp nổi bật tại Việt Nam'
       }
-    }  
-  }  
+    },
+    description()
+    {
+      return this. count + ' công ty, doanh nghiệp nổi bật. Tìm kiếm mã số thuế, số giấy chứng nhận đăng ký kinh doanh tại Việt Nam'
+    }
+  },
+  created() {
+    // const path = location.pathname.split('page')[1]
+    // this.currentPage = path ? Number(path) : 1
+  }
 }
 </script>
 

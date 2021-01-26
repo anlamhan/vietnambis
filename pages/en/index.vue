@@ -9,7 +9,15 @@
     <div class="section">
     <div class="nine columns">
     <business-list :businesses="businesses"></business-list>
-    <nuxt-link class="more" to="/page/1">See more</nuxt-link>
+    <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        first-link="/page/1"
+        link="/page"
+        linkPath="/"        
+      ></nuxt-pager>
     </div>
     <div class="three columns">
       <province-list :provinces="provinces"></province-list>
@@ -36,10 +44,11 @@ import axios from 'axios'
 import BusinessList from '~/components/BusinessList'
 import ProvinceList from '~/components/ProvinceList'
 import Search from '~/components/Search'
+import NuxtPager from '~/components/NuxtPager'
 export default {
   async asyncData({ error }) {
     const page = 0;    
-    const hostname = process.env.baseUrl    
+    const hostname = process.env.baseUrl;
     let [pageRes, countRes, provinceRes, industryRes] = await Promise.all([
       axios.get(`${hostname}/api/business/page/${page}?scope=1`),
       axios.get(`${hostname}/api/business/count/1`),
@@ -53,31 +62,45 @@ export default {
       businesses: pageRes.data.list,
       count: countRes.data.result,
       provinces: provinceRes.data.list,
-      industries: industryRes.data.list
+      industries: industryRes.data.list,
+      page:page
     }
   },
   components: {
     BusinessList,
     ProvinceList,
-    Search
+    Search,
+    NuxtPager
   },
   head() {
-    return {      
+    return {    
+      htmlAttrs: {
+      lang: 'en'
+      },
+      title: 'Vietnam Bis: Vietnam Business Information System',       
       meta: [
+        { hid: 'description', name: 'description', content: this.description},
        { name: 'twitter:card', value: 'summary' },
        { name:'twitter:url', content:'https://vietnambis.com'},
        { name:'twitter:title', content:'Vietnam Bis, Vietnam Business Directory'},
        {name:'twitter:site', content:'@vietnambis'},
+       {name:'twitter:description', content:'@vietnambis'},
        {name:'twitter:creator', content:'@vietnambis'},
        { property: 'og:url', content: 'https://vietnambis.com' },
         { property: 'og:title', content:'Vietnam Bis, Vietnam Business Directory'},
-        { property: 'og:description', content:'Look up business information, new companies, business lines and tax codes'},
-        { property: 'og:type', content:'article'}
+        { property: 'og:description', content:this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
       ]
       ,
       link:[
-        {rel:'canonical', href:'https://vietnambis.com'}
+        {rel:'canonical', href:'https://vietnambis.com/en'}
       ]
+    }
+  },
+  computed: {
+    description() {
+      return 'Look up information about businesses, new companies, business lines and tax codes in Vietnam with '+this.count+' records in the database.'
     }
   }
 }

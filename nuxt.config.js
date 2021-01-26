@@ -1,8 +1,6 @@
 //const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const axios = require('axios');
-//const cheerio = require('cheerio');
-
 module.exports = {
   server: {
     port: 3000, // default: 3000
@@ -25,7 +23,7 @@ module.exports = {
       { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
       /* iOS device */
       { name: 'author', content: 'admin@vietnambis.com' },
-      { name: 'apple-mobile-web-app-title', content: 'Vietnam business database, more than 1.8m businesses in Vietnam' },
+      { name: 'apple-mobile-web-app-title', content: 'Vietnam business database, more than 2.0m businesses in Vietnam' },
       { name: 'apple-mobile-web-app-capable', content: 'yes' },
       { name: 'apple-mobile-web-app-status-bar-style', content: '#263238' },
       /*fullscreen and app mode*/
@@ -58,22 +56,33 @@ module.exports = {
     path: '/sitemapindex.xml',
     hostname: 'https://vietnambis.com',
     gzip: true,
-    generate: true,
+    generate: false,
     exclude: [
        '/acontact',
        '/admin',
        '/login'
-     ],
-    // routes: async () => {
-    //   const { data } = await axios.get(`https://vietnambis.com/api/business/geturls/1`)
-    //   return data.businesses.map(url => `/vn/${url.vnslug}-${url.id}.html`)
-    // },
+     ],    
     sitemaps: [
       {
         path: '/sitemap-vn.xml',
         lastmod: new Date().toISOString(),
         gzip: true,
         generate: true,
+        exclude: [
+          '/admin',
+          '/login',
+          '/vn/date',
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
         routes: async () => {
        const { data } = await axios.get(`https://vietnambis.com/api/business/geturls/1`)
        return data.businesses.map(url => `/vn/${url.vnslug}-${url.id}.html`)
@@ -84,9 +93,216 @@ module.exports = {
         lastmod: new Date().toISOString(),
         gzip: true,
         generate: true,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
         routes: async () => {
           const { data } = await axios.get(`https://vietnambis.com/api/business/geturls/1`)
           return data.businesses.map(url => `/${url.slug}-${url.id}.html`)
+        }
+      },
+      {
+        path: '/provinces-vn.xml',        
+        gzip: true,
+        generate: true,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
+        routes: async () => {
+          const { data } = await axios.get(`https://vietnambis.com/api/province/list`)          
+          return data.list.map(url => `/vn/tinh-thanh/${url.slug}-${url.id}`)
+        }
+      },
+      {
+        path: '/provinces-en.xml',        
+        gzip: true,
+        generate: true,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
+        routes: async () => {
+          const { data } = await axios.get(`https://vietnambis.com/api/province/list`)
+          return data.list.map(url => `/province/${url.slug}-${url.id}`)
+        }
+      },
+      {
+        path: '/districts-vn.xml',        
+        gzip: true,
+        generate: false,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
+        routes: async () => {
+          const { data } = await axios.get(`https://vietnambis.com/api/district/list`)          
+          return data.list.map(url => `/vn/huyen/${url.slug}-${url.id}`)
+        }
+      },
+      {
+        path: '/districts-en.xml',        
+        gzip: true,
+        generate: true,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
+        routes: async () => {
+          const { data } = await axios.get(`https://vietnambis.com/api/district/list`)
+          return data.list.map(url => `/district/${url.slug}-${url.id}`)
+        }
+      },
+      {
+        path: '/communes-vn.xml',        
+        gzip: true,
+        generate: true,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
+        routes: async () => {
+          const { data } = await axios.get(`https://vietnambis.com/api/commune/list`)          
+          return data.list.map(url => `/vn/xa/${url.slug}-${url.id}`)
+        }
+      },
+      {
+        path: '/communes-en.xml',        
+        gzip: true,
+        generate: true,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
+        routes: async () => {
+          const { data } = await axios.get(`https://vietnambis.com/api/commune/list`)
+          return data.list.map(url => `/commune/${url.slug}-${url.id}`)
+        }
+      },
+      {
+        path: '/industries-vn.xml',        
+        gzip: true,
+        generate: true,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
+        routes: async () => {
+          const { data } = await axios.get(`https://vietnambis.com/api/industry/list`)          
+          return data.list.map(url => `/vn/nganh/${url.vnslug}-${url.id}`)
+        }
+      },
+      {
+        path: '/industries-en.xml',        
+        gzip: true,
+        generate: true,
+        exclude: [
+          '/admin',
+          '/vn/date',
+          '/login',          
+          '/vn/ket-qua',
+          '/vn',
+          '/search',
+          '/index_en',
+          '/acontact',
+          '/login/**',
+          '/admin/**',
+          '/post/**',
+          '/business/**',
+          '/vn/doanh-nghiep/**'
+        ],
+        routes: async () => {
+          const { data } = await axios.get(`https://vietnambis.com/api/industry/list`)
+          return data.list.map(url => `/industry/${url.slug}-${url.id}`)
         }
       }
     ]

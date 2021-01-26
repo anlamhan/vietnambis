@@ -7,6 +7,11 @@
     <div class="section">
         <div class="nine columns">
         <transition-group name="list" tag="section">
+          <article v-for="post in api_posts" :key="post.title">   
+       <a :href="`/vn/blog/${post.slug}.html`">{{ post.title }}</a>                     
+        <div class="desc">{{post.description}}</div>        
+      </article>
+
      <article v-for="post in posts" :key="post.title">   
        <a :href="`/vn/blog/${post.slug}.html`">{{ post.title }}</a>                     
         <div class="desc">{{post.meta_description}}</div>        
@@ -27,7 +32,8 @@ export default {
   async asyncData({ params, error }) {   
     let page = parseInt(params.id) || 0
     var host = process.env.baseUrl;    
-    let [postRes, provinceRes, countRes] = await Promise.all([
+    let [apiRes, postRes, provinceRes, countRes] = await Promise.all([
+      axios.get(`http://cms.vietnambis.com/posts`),
       axios.get(`${host}/api/post/page/${page}?scope=published`),
       axios.get(`${host}/api/province/list`),      
       axios.get(`${host}/api/post/count/0`)
@@ -38,7 +44,8 @@ export default {
       provinces: provinceRes.data.list,
       posts: postRes.data.list,
       count: countRes.data.result,
-      page
+      api_posts: apiRes.data,
+      page      
     }
     },
     components: {    
@@ -60,7 +67,7 @@ export default {
   },
   computed: {  
   title()
-    {
+    {      
       if(this.page > 1){
         return 'Blogs: Các bài viết về doanh nghiệp' + ' | Trang ' + this.page
       }else

@@ -5,11 +5,19 @@
     <div class="nine columns">      
       <div class="title"><h1> {{industry.code}} - {{industry.english_name}}</h1></div>
       <div class="info">
-        <p>Industry name: {{industry.english_name}}</p>
+        <p>VietnamBis has {{this.count}} companies under {{industry.english_name}}</p>
       </div>
       <div class="content">
-        <business-list :businesses="businesses"></business-list>
-        <vue-page :total="count" :page="page" :path="'/industry/'+industry.slug+'-'+industry.id+'/'" model="link"></vue-page>
+        <business-list :businesses="businesses"></business-list>        
+        <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        :first-link="'/industry/'+industry.slug+'-'+industry.id"
+        :link="'/industry/'+industry.slug+'-'+industry.id"
+        linkPath="/"        
+      ></nuxt-pager>
       </div>    
       </div>
       <div class="three columns">      
@@ -21,7 +29,7 @@
 import axios from 'axios'
 import CommuneList from '~/components/CommuneList'
 import BusinessList from '~/components/BusinessList'
-import VuePage from '~/components/VuePage'
+import NuxtPager from '~/components/NuxtPager'
 
 export default {
 
@@ -46,15 +54,29 @@ export default {
     }    
   },
   components: {
-    VuePage,
+    NuxtPager,
     BusinessList    
   },
   head() {
     return {
+      htmlAttrs: {
+      lang: 'en'
+      },
       title: this.title,
       meta: [
-        { hid: 'description', name: 'description', content: 'This page lists all businesses in the industry name: ' + this.industry.code + ' - '+this.industry.english_name },
-        { name: 'keywords', content: this.keywords.join(',') }
+        { hid: 'description', name: 'description', content: this.description},
+        { name: 'keywords', content: this.keywords.join(',') },
+        { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: this.fullurl },
+        { name: 'twitter:title', content:this.title},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
+        { property: 'og:url', content: this.fullurl },
+        { property: 'og:title', content: this.title},
+        { property: 'og:description', content:this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
       ],
       link:[
         {rel:'canonical', href:'https://vietnambis.com/industry/'+this.industry.slug+'-'+this.industry.id}
@@ -74,6 +96,19 @@ export default {
       }else
       {
         return this.industry.code + ' - ' +this.industry.english_name
+      }
+    },    
+    description()
+    {
+      return 'VietnamBis has '+ this.count +' companies under: ' + this.industry.code + ' - '+this.industry.english_name + ' in Vietnam'
+    },
+    fullurl()
+    {
+      if(this.page > 1){
+        return 'https://vietnambis.com/industry/'+this.industry.slug+'-'+this.industry.id +'/' + this.page
+      }else
+      {
+        return 'https://vietnambis.com/industry/'+this.industry.slug+'-'+this.industry.id
       }
     }
   }

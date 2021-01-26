@@ -3,13 +3,21 @@
     <div class="breadcrumbs"><span><a href="https://vietnambis.com">Home</a></span>  » <span>{{province.province_name}} province / city</span> </div>
     <div class="section">
     <div class="nine columns">    
-      <div class="title"><h1> {{province.province_name}}</h1></div>
+      <div class="title"><h1>{{this.count}} Companies and Enterprises in {{province.province_name}}</h1></div>
       <div class="info">
         <p>All businesses in : {{province.province_name}} province / city</p>
       </div>
       <div class="content">
         <business-list :businesses="businesses"></business-list>
-        <vue-page :total="count" :page="page" :path="'/province/'+province.slug+'-'+province.id+'/'" model="link"></vue-page>
+        <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        :first-link="'/province/'+province.slug+'-'+province.id"
+        :link="'/province/'+province.slug+'-'+province.id"
+        linkPath="/"        
+      ></nuxt-pager>
       </div>      
       </div>
       <div class="three columns">        
@@ -20,27 +28,9 @@
 </template>
 <script>
 import axios from 'axios'
-//import timeago from 'timeago.js'
-//import hljs from 'highlight.js'
 import DistrictList from '~/components/DistrictList'
 import BusinessList from '~/components/BusinessList'
-import VuePage from '~/components/VuePage'
-
-// let marked = require('marked');
-
-// marked.setOptions({
-//   renderer: new marked.Renderer(),
-//   gfm: true,
-//   tables: true,
-//   breaks: false,
-//   pedantic: false,
-//   sanitize: false,
-//   smartLists: true,
-//   smartypants: false,
-//   highlight: function (code) {
-//     return hljs.highlightAuto(code).value;
-//   }
-// });
+import NuxtPager from '~/components/NuxtPager'
 
 export default {
   async asyncData({ params, error }) {    
@@ -66,19 +56,33 @@ export default {
      }    
   },
   components: {
-    VuePage,
+    NuxtPager,
     BusinessList,
     DistrictList
   },
   head() {
     return {
+      htmlAttrs: {
+      lang: 'en'
+      },
       title: this.title,
       meta: [
-        { hid: 'description', name: 'description', content: 'This page lists all businesses in '+this.province.province_name+' province / city. ' + this.count + ' company profiles' },
-        { name: 'keywords', content: this.keywords.join(',') }
+        { hid: 'description', name: 'description', content: this.description },
+        { name: 'keywords', content: this.keywords.join(',') },
+        { property: 'og:url', content: this.fullurl },
+        { property: 'og:title', content: this.title},
+        { property: 'og:description', content: this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'},
+        { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: this.fullurl },
+        { name: 'twitter:title', content:this.title},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
       ],
       link:[
-        {rel:'canonical', href:'https://vietnambis.com/province/'+this.province.slug+'-'+this.province.id}
+        {rel:'canonical', href:this.fullurl}
       ]
     }
   },
@@ -87,13 +91,33 @@ export default {
       let keywords = [this.province.province_name];      
       return keywords
     },
+    description()
+    {
+      if(this.page > 1)
+      {
+        return 'Find your company, business information on our '+ this.count + ' profiles in ' + this.province.province_name +' province / city | page ' + this.page
+      }
+      else
+      {
+        return 'Find your company, business information on our '+ this.count + ' profiles in ' + this.province.province_name +' province / city'
+      }
+    },
     title()
     {
       if(this.page > 1){
-        return this.province.province_name + ' province / city | Page ' + this.page
+        return this.count + ' Companies, Businesses in '+ this.province.province_name + ' province / city | Page ' + this.page
       }else
       {
-        return this.province.province_name + ' province / city'
+        return this.count + ' Companies, Businesses in '+ this.province.province_name + ' province / city'
+      }
+    },
+    fullurl()
+    {
+      if(this.page > 1){
+        return 'https://vietnambis.com/province/'+this.province.slug+'-'+this.province.id +'/' + this.page
+      }else
+      {
+        return 'https://vietnambis.com/province/'+this.province.slug+'-'+this.province.id
       }
     }
   }

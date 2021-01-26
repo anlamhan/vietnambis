@@ -12,7 +12,7 @@ export default class Commune {
     }
     
     one(districtId, callback) {
-        let sql = "SELECT c.id, c.commune_name, c.full_commune_name, c.vietnamese_name, c.slug, c.category, c.district_id, d.district_name, d.vietnamese_name as vietnamese_district_name, d.slug as district_slug, c.province_id, p.province_name, p.vietnamese_name as vietnamese_province_name, p.slug as province_slug FROM communes c join districts d on c.district_id = d.id join provinces p on c.province_id = p.id where c.id = ?";
+        let sql = "SELECT c.id, c.commune_name, c.full_commune_name, c.vietnamese_name, c.slug, c.category, c.district_id, d.district_name, d.full_district_name, d.vietnamese_name as vietnamese_district_name, d.slug as district_slug, c.province_id, p.province_name, p.vietnamese_name as vietnamese_province_name, p.slug as province_slug FROM communes c join districts d on c.district_id = d.id join provinces p on c.province_id = p.id where c.id = ?";
         db.query(sql, [districtId], (err, result) => {
             if (err) {
                 return callback(true);

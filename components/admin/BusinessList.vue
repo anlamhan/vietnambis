@@ -12,7 +12,8 @@
                 <nuxt-link target="_blank" class="btn btn-small btn-main" :to="'/post/'+biz.id">Xem trước</nuxt-link>
             </div>
         </article>
-        <vue-page :total="count" :page="page" model="button" v-on:pageChange="getPageList" class="vue-page"></vue-page>
+        <!-- <vue-page :total="count" :page="page" model="button" v-on:pageChange="getPageList" class="vue-page"></vue-page> -->
+        <pagination :total="count" :currentPage="page" :totalPages="1000" @pagechanged="onPageChange"></pagination>
     </div>
 </template>
 
@@ -20,6 +21,7 @@
 import axios from 'axios'
 
 import VuePage from '~/components/VuePage'
+import Pagination from '~/components/Pagination.vue'
 import PageHeader from '~/components/admin/PageHeader'
 
 export default {
@@ -40,7 +42,8 @@ export default {
     },
     components: {
         VuePage,
-        PageHeader
+        PageHeader,
+        Pagination
     },
     methods: {
         refreshComponent(isSaveCurrPage) {
@@ -88,6 +91,10 @@ export default {
             }).catch((err) => {
                 alert(err)
             });
+        },
+        onPageChange(page) {         
+            this.page = page;
+            this.getPageList(page)
         }
     }
 }

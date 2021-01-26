@@ -27,7 +27,7 @@ export default {
  async asyncData({ params, error }) {        
      var name='';
      if(params.name !== null && params.name !== '') {
-        name= params.name.trim();
+        name= params.name == undefined ? '' : params.name.trim();
       }  
     let page = parseInt(params.id) || 1
     var host = process.env.baseUrl;    

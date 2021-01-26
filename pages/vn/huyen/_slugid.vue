@@ -1,15 +1,25 @@
 <template>
   <div class="container">
-    <div class="breadcrumbs"><span><a href="https://vietnambis.com/vn">Trang chủ</a></span>  » <span><a :href="'https://vietnambis.com/vn/tinh-thanh/'+district.province_slug + '-' + district.province_id">{{district.vietnamese_province_name}}</a></span>  » <span>{{district.vietnamese_name}}</span> </div>
+    <div class="breadcrumbs"><span><a href="https://vietnambis.com/vn">Trang chủ</a></span>  » <span><a :href="'https://vietnambis.com/vn/tinh-thanh/'+ this.district.province_slug + '-' + district.province_id">{{district.vietnamese_province_name}}</a></span>  » <span>{{district.vietnamese_name}}</span> </div>
     <div class="section">
     <div class="nine columns">      
-      <div class="title"><h1> {{district.vietnamese_name}}, {{district.vietnamese_province_name}}</h1></div>
+      <div class="title"><h1> Công ty, doanh nghiệp tại {{district.vietnamese_name}}, {{district.vietnamese_province_name}} | Trang {{this.page}}</h1></div>
       <div class="info">
         <p>Tất cả doanh nghiệp, công ty thuộc quận/ huyện: {{district.vietnamese_name}}</p>
       </div>
       <div class="content">
-        <business-list :businesses="businesses"></business-list>
-        <vue-page :total="count" :page="page" :path="'/vn/huyen/'+district.slug+'-'+district.id+'/'" model="link"></vue-page>
+        <business-list :businesses="businesses"></business-list>        
+        <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        :first-link="'/vn/huyen/'+district.slug+'-'+district.id"
+        :link="'/vn/huyen/'+district.slug+'-'+district.id"
+        linkPath="/"
+        prevPageText="Trang trước"
+        nextPageText="Trang tiếp theo"
+      ></nuxt-pager>
       </div>    
       </div>
       <div class="three columns">
@@ -20,28 +30,9 @@
 </template>
 <script>
 import axios from 'axios'
-//import timeago from 'timeago.js'
-//import hljs from 'highlight.js'
 import CommuneList from '~/components/vn/CommuneList'
 import BusinessList from '~/components/vn/BusinessList'
-import VuePage from '~/components/vn/VuePage'
-
-// let marked = require('marked');
-
-// marked.setOptions({
-//   renderer: new marked.Renderer(),
-//   gfm: true,
-//   tables: true,
-//   breaks: false,
-//   pedantic: false,
-//   sanitize: false,
-//   smartLists: true,
-//   smartypants: false,
-//   highlight: function (code) {
-//     return hljs.highlightAuto(code).value;
-//   }
-// });
-
+import NuxtPager from '~/components/NuxtPager'
 export default {
   layout: 'vn',
   async asyncData({ params, error }) {        
@@ -57,8 +48,7 @@ export default {
     ]).catch(err => {
       error({ statusCode: 400, message: err })
     })
-
-    return {
+    return {      
       district: districtRes.data.list,      
       communes: communeRes.data.list,
       businesses: businessRes.data.list,
@@ -67,19 +57,33 @@ export default {
     }    
   },
   components: {
-    VuePage,
+    NuxtPager,
     BusinessList,
     CommuneList
   },
   head() {
     return {
+      htmlAttrs: {
+      lang: 'vi'
+      },
       title: this.title,
       meta: [
-        { hid: 'description', name: 'description', content: 'Tất cả doanh nghiệp, công ty thuộc '+this.district.vietnamese_name+'. Có ' + this.count + ' hồ sơ'},
-        { name: 'keywords', content: this.keywords.join(',') }
+        { hid: 'description', name: 'description', content: 'Tất cả doanh nghiệp, công ty thuộc '+this.district.vietnamese_name+ ', '+ this.district.vietnamese_province_name +'. Có ' + this.count + ' hồ sơ'},
+        { name: 'keywords', content: this.keywords.join(',') },
+        { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: this.fullurl },
+        { name: 'twitter:title', content:this.title},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
+        { property: 'og:url', content: this.fullurl },
+        { property: 'og:title', content: this.title},
+        { property: 'og:description', content:this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
       ],
       link:[
-        {rel:'canonical', href:'https://vietnambis.com/vn/huyen/'+this.district.slug+'-'+this.district.id}
+        {rel:'canonical', href: this.fullurl}
       ]
     }
   },
@@ -91,10 +95,22 @@ export default {
     title()
     {
       if(this.page > 1){
-        return this.district.vietnamese_name + ' | Trang ' + this.page
+        return this.count + ' công ty, doanh nghiệp tại ' + this.district.vietnamese_name +', ' + this.district.vietnamese_province_name + ' | Trang ' + this.page
       }else
       {
-        return this.district.vietnamese_name + ' '
+        return this.count + ' công ty, doanh nghiệp tại ' + this.district.vietnamese_name + ', ' + this.district.vietnamese_province_name
+      }
+    },
+    description(){
+      return 'Tất cả doanh nghiệp, công ty thuộc '+this.district.vietnamese_name+ ', '+ this.district.vietnamese_province_name +'. Có ' + this.count + ' hồ sơ'
+    },
+    fullurl()
+    {
+      if(this.page > 1){
+        return 'https://vietnambis.com/vn/huyen/'+this.district.slug+'-'+this.district.id +'/' + this.page
+      }else
+      {
+        return 'https://vietnambis.com/vn/huyen/'+this.district.slug+'-'+this.district.id
       }
     }
   }

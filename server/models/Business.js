@@ -460,11 +460,29 @@ export default class Business {
         });
     }
     update(business, callback) {
-        let sql = 'UPDATE businesses SET ' + businessToSQLUpdate(business).updated + ' WHERE id = ?'
-        console.log(sql)
-        let params = businessToSQLUpdate(business).params
-        console.log(params)
-        params.push(business.id);
+        //let sql = 'UPDATE businesses SET ' + businessToSQLUpdate(business).updated + ' WHERE id = ?'
+        //console.log(sql)
+        let sql = 'UPDATE businesses SET english_name=?, vietnamese_name=?, full_name=?, abbreviated_name=?, tax_id=?, registration_number=?, tel=?, fax=?, email=?, website=?,legal_representative=?,vn_legal_representative=?,english_address=?,vietnamese_address=? WHERE id = ?'                
+        let params = [business.english_name, 
+            business.vietnamese_name,
+            business.full_name,
+            business.abbreviated_name,
+            business.tax_id,
+            business.registration_number,
+            business.tel,
+            business.fax,
+            business.email,
+            business.website,
+            business.legal_representative,
+            business.vn_legal_representative,
+            business.english_address,
+            business.vietnamese_address,
+            business.id
+        ]
+
+        //let params = businessToSQLUpdate(business).params
+        //console.log(params)
+        //params.push(business.id);
 
         db.query(sql, params, (err, result) => {
             if (err) {

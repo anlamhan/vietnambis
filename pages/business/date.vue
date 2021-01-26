@@ -26,7 +26,7 @@ import VuePage from '~/components/VuePage'
 export default {  
     
  async asyncData({ params, error }) {       
-   let page = parseInt(params.id) || 1
+   let page = parseInt(params.id) || 1;
     var host = process.env.baseUrl;
     let [businessRes, provinceRes, countRes] = await Promise.all([
      axios.get(`${host}/api/business/getbusinessbydate/${params.date}/${page}`),

@@ -4,13 +4,21 @@
    <span><a :href="'https://vietnambis.com/province/'+commune.province_slug + '-' + commune.province_id">{{commune.province_name}}</a></span> » <span><a :href="'https://vietnambis.com/district/'+commune.district_slug + '-' + commune.district_id">{{commune.district_name}} district </a></span>  » <span>{{commune.commune_name}} commune</span> </div>
     <div class="section">
     <div class="nine columns">      
-      <div class="title"><h1>{{commune.commune_name}} {{this.category}}</h1></div> 
+      <div class="title"><h1>{{commune.commune_name}} {{this.category}}, {{this.commune.full_district_name}}, {{this.commune.province_name}} province/city </h1></div> 
       <div class="info">
-        <p>All companies in : {{commune.commune_name}}</p>
+        <p>VietnamBis has {{this.count}} companies in : {{commune.commune_name}} {{this.category}}, {{this.commune.full_district_name}}, {{this.commune.province_name}} province/city</p>
       </div>
       <div class="content">
-        <business-list :businesses="businesses"></business-list>
-        <vue-page :total="count" :page="page" :path="'/commune/'+commune.slug+'-'+commune.id+'/'" model="link"></vue-page>
+        <business-list :businesses="businesses"></business-list>        
+        <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        :first-link="'/commune/'+commune.slug+'-'+commune.id"
+        :link="'/commune/'+commune.slug+'-'+commune.id"
+        linkPath="/"                
+      ></nuxt-pager>
       </div>
       </div>
       <div class="three columns">      
@@ -20,11 +28,8 @@
 </template>
 <script>
 import axios from 'axios'
-// import timeago from 'timeago.js'
-// import hljs from 'highlight.js'
 import BusinessList from '~/components/BusinessList'
-import VuePage from '~/components/VuePage'
-// import { resolve } from 'q'
+import NuxtPager from '~/components/NuxtPager'
 
 export default {
   async asyncData({ params, error }) {
@@ -38,8 +43,7 @@ export default {
       axios.get(`${host}/api/business/countby/${id}?scope=1&type=commune`)
     ]).catch(err => {
       error({ statusCode: 400, message: err })
-    })
-
+    })    
     return {
       commune: communeRes.data.list,            
       businesses: businessRes.data.list,
@@ -48,18 +52,32 @@ export default {
     }    
   },
   components: {
-    VuePage,
+    NuxtPager,
     BusinessList
   },
   head() {
     return {
+      htmlAttrs: {
+      lang: 'en'
+      },
       title: this.title,
       meta: [
-        { hid: 'description', name: 'description', content: 'This page lists all businesses in '+this.commune.commune_name+' ' + this.category + '. ' + this.count + ' company profiles' },
-        { name: 'keywords', content: this.keywords.join(',') }
+        { hid: 'description', name: 'description', content: this.description },
+        { name: 'keywords', content: this.keywords.join(',') },
+        { property: 'og:url', content: this.fullurl },
+        { property: 'og:title', content: this.title},
+        { property: 'og:description', content:this.description},
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'},
+        { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: this.fullurl },
+        { name: 'twitter:title', content:this.title},
+        { name: 'twitter:description', content:this.description},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
       ],
       link:[
-        {rel:'canonical', href:'https://vietnambis.com/commune/'+this.commune.slug+'-'+this.commune.id}
+        {rel:'canonical', href:this.fullurl}
       ]
     }
   },
@@ -67,6 +85,13 @@ export default {
     keywords() {
       let keywords = [this.commune.commune_name];     
       return keywords
+    },
+    description(){
+      if(this.page > 1){
+      return 'VietnamBis has '+ this.count + ' company, enterprise profiles in ' + this.commune.commune_name +' ' + this.category + ', ' + this.commune.full_district_name + ', ' + this.commune.province_name + ' province/city. Find your businesses in Vietnam | page ' + this.page
+      }
+      else
+      return 'VietnamBis has '+ this.count + ' company, enterprise profiles in ' + this.commune.commune_name +' ' + this.category + ', ' + this.commune.full_district_name + ', ' + this.commune.province_name +' province/city. Find your businesses in Vietnam'
     },
     category(){
     let type = this.commune.category; 
@@ -94,10 +119,21 @@ export default {
   title()
     {
       if(this.page > 1){
-        return this.commune.commune_name +' ' + this.category + ' | Page ' + this.page
+        return this.count +' companies in ' + this.commune.commune_name +' ' + this.category + ', ' + this.commune.full_district_name + ', ' + this.commune.province_name + ' | Page ' + this.page
       }else
       {
-        return this.commune.commune_name +' ' + this.category + ' '
+        return this.count +' companies in ' + this.commune.commune_name +' ' + this.category + ', ' + this.commune.full_district_name + ', ' + this.commune.province_name
+      }
+    },
+    fullurl()
+    {
+      if(this.page > 1)
+      {
+        return 'https://vietnambis.com/commune/'+this.commune.slug+'-'+this.commune.id+'/'+this.page
+      }
+      else
+      {
+        return 'https://vietnambis.com/commune/'+this.commune.slug+'-'+this.commune.id
       }
     }
   }

@@ -101,17 +101,7 @@ export default {
   async asyncData({params, error }) {        
     var n = params.slugid.lastIndexOf("-");
     var id = params.slugid.substring(n+1,params.slugid.lenght);
-    var slug = params.slugid.substring(0,n);
-    
-    //  return axios.get(`${process.env.baseUrl}/api/business/getbusiness/` + id+'/1').then((res) => {
-    //    if (res.data.code === 404) {
-    //      error({ statusCode: 404, message: 'Business was not found' });
-    //    }
-    //    var business = res.data.list[0];          
-    //    return { business }
-    //  }).catch((err) => {
-    //    error({ statusCode: 404, message: err.message })
-    //  })  
+    var slug = params.slugid.substring(0,n);    
      let [businessRes, newBiz] = await Promise.all([
       axios.get(`${process.env.baseUrl}/api/business/getbusiness/` + id+'/1'),
       axios.get(`${process.env.baseUrl}/api/business/page/1`),      
@@ -130,6 +120,9 @@ export default {
   },
   head() {
     return {
+       htmlAttrs: {
+      lang: 'en'
+      },
       title: this.business.tax_id +' - ' + this.business.english_name,
       meta: [
         { hid: 'description', name: 'description', content: this.description },
@@ -137,12 +130,14 @@ export default {
         { name: 'twitter:card', value: 'summary' },
         { name: 'twitter:url', content: 'https://vietnambis.com/' + this.business.slug + '-'+this.business.id+'.html' },
         { name: 'twitter:title', content:this.business.english_name +' - ' + this.business.tax_id},
+        { name: 'twitter:description', content:this.description},
         { name: 'twitter:site', content:'@vietnambis'},
         { name: 'twitter:creator', content:'@vietnambis'},
         { property: 'og:url', content: 'https://vietnambis.com/' + this.business.slug + '-'+this.business.id+'.html' },
         { property: 'og:title', content:this.business.english_name +' - ' + this.business.tax_id},
         { property: 'og:description', content:this.description},
-        { property: 'og:type', content:'article'}
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
       ],
       link:[
         {rel:'canonical', href:'https://vietnambis.com/' + this.business.slug + '-'+this.business.id+'.html'}
@@ -151,7 +146,7 @@ export default {
   },
   computed: {
     keywords() {
-      let keywords = [this.business.tax_id];      
+      let keywords = [this.business.tax_id, this.business.english_name];      
       return keywords
     },
     description() {

@@ -8,8 +8,17 @@
     </div>
     <div class="section">
     <div class="nine columns">
-    <business-list :businesses="businesses"></business-list>
-    <nuxt-link class="more" to="/vn/trang/1">Xem thêm</nuxt-link>
+    <business-list :businesses="businesses"></business-list>    
+    <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        first-link="/vn/trang"
+        link="/vn/trang"
+        linkPath="/"
+        nextPageText="Trang tiếp theo"
+      ></nuxt-pager>
     </div>
     <div class="three columns">
       <province-list :provinces="provinces"></province-list>
@@ -35,6 +44,7 @@
 import axios from 'axios'
 import BusinessList from '~/components/vn/BusinessList'
 import ProvinceList from '~/components/vn/ProvinceList'
+import NuxtPager from '~/components/NuxtPager'
 import Search from '~/components/vn/Search'
 export default {
   layout: 'vn',  
@@ -55,34 +65,45 @@ export default {
       businesses: pageRes.data.list,
       count: countRes.data.result,
       provinces: provinceRes.data.list,
-      industries: industryRes.data.list
+      industries: industryRes.data.list,
+      page: page
     }
   },
   components: {
     BusinessList,
     ProvinceList,
-    Search
+    Search,
+    NuxtPager
   },
-  head() {
+  head() {    
     return { 
-      title: 'Tra cứu mã số thuế doanh nghiệp, tra cứu tên doanh nghiệp',     
+      htmlAttrs: {
+      lang: 'vi'
+      },
+      title: 'Tra cứu mã số thuế doanh nghiệp, tra cứu tên doanh nghiệp. VietnamBis',     
       meta: [         
-       { hid: 'description', name: 'description', content: 'Tra cứu mã số thuế, Tra cứu doanh nghiệp tại Việt Nam với gần 2 triệu dữ liệu và luôn được cập nhật liên tục'},
+       { hid: 'description', name: 'description', content: this.description},
        { name: 'twitter:card', value: 'summary' },
-       { name:'twitter:url', content:'https://vietnambis.com/vn'},
+       { name:'twitter:url', content:'https://vietnambis.com'},
        { name:'twitter:title', content:'Thông tin doanh nghiệp, mã số thuế, doanh nghiệp mới'},
+       { name:'twitter:description', content:this.description},
        {name:'twitter:site', content:'@vietnambis'},
        {name:'twitter:creator', content:'@vietnambis'},
-       { property: 'og:url', content: 'https://vietnambis.com/vn' },
+       { property: 'og:url', content: 'https://vietnambis.com' },
         { property: 'og:title', content:'Thông tin doanh nghiệp, mã số thuế, doanh nghiệp mới'},
-        { property: 'og:description', content:'Tra cứu thông tin doanh nghiệp, công ty mới, ngành nghề kinh doanh và mã số thuế'},
+        { property: 'og:description', content:this.description},
         { property: 'og:type', content:'article'}
       ],
       link:[
-        {rel:'canonical', href:'https://vietnambis.com/vn'}
+        {rel:'canonical', href:'https://vietnambis.com'}
       ]
     }
-  },
+  },  
+   computed: {
+    description() {
+      return 'Tra cứu thông tin doanh nghiệp, công ty mới, ngành nghề kinh doanh và mã số thuế tại Việt Nam với '+ this.count+' hồ sơ trong cơ sở dữ liệu'
+    }
+   }
 }
 </script>
 

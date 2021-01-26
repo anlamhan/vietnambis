@@ -8,8 +8,16 @@
     </div>
     <div class="section">
     <div class="nine columns">
-    <business-list :businesses="businesses"></business-list>
-    <nuxt-link class="more" to="/page/1">See more</nuxt-link>
+    <business-list :businesses="businesses"></business-list>    
+    <nuxt-pager
+        :total="count"
+        :pageSize="20"
+        :currentPage="page"
+        :use-a-link="true"
+        first-link="/page/1"
+        link="/page"
+        linkPath="/"        
+      ></nuxt-pager>
     </div>
     <div class="three columns">
       <province-list :provinces="provinces"></province-list>
@@ -36,10 +44,11 @@ import axios from 'axios'
 import BusinessList from '~/components/BusinessList'
 import ProvinceList from '~/components/ProvinceList'
 import Search from '~/components/Search'
+import NuxtPager from '~/components/NuxtPager'
 export default {
   async asyncData({ error }) {
     const page = 0;    
-    const hostname = process.env.baseUrl    
+    const hostname = process.env.baseUrl;
     let [pageRes, countRes, provinceRes, industryRes] = await Promise.all([
       axios.get(`${hostname}/api/business/page/${page}?scope=1`),
       axios.get(`${hostname}/api/business/count/1`),
@@ -59,7 +68,8 @@ export default {
   components: {
     BusinessList,
     ProvinceList,
-    Search
+    Search,
+    NuxtPager
   },
   head() {
     return {      

@@ -6,7 +6,7 @@
 
 <script>
 
- import hljs from 'highlight.js'
+ //import hljs from 'highlight.js'
 
  let marked = require('marked');
  marked.setOptions({
@@ -18,9 +18,9 @@
      sanitize: false,
      smartLists: true,
      smartypants: false,
-     highlight: function (code) {
-       return hljs.highlightAuto(code).value;
-     }
+    //  highlight: function (code) {
+    //    return hljs.highlightAuto(code).value;
+    //  }
  });
 
 export default {
