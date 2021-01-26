@@ -2,6 +2,7 @@
 
 Vietnambis.com is a corporate information site in Vietnam。
 
+<<<<<<< HEAD
 Demo：[https://vietnambis.com](https://vietnambis.com)
 
 ## Note
@@ -10,6 +11,17 @@ Recently, Nuxt officially upgraded the version to 2.14.7
 
 
 
+=======
+Demo Vietnamese：[https://vietnambis.com](https://vietnambis.com)
+Demo English：[https://vietnambis.com/en](https://vietnambis.com/en)
+
+## Note
+
+Recently, Nuxt officially upgraded the version to 2.14.7
+
+
+
+>>>>>>> 64ca58ac5602da25dbacd253e1599cc9ad5f38c1
 Add nuxt to Vue project
 
 ```
@@ -17,6 +29,7 @@ npm install --save nuxt@2.14.7
 ```
 
 ## Technology stack
+<<<<<<< HEAD
 
 Vue.js
 Nuxt.js
@@ -29,6 +42,21 @@ Mysql
 Node.js
 Express.js
 
+=======
+
+```
+Vue.js
+Nuxt.js
+ElasticSearch
+redis
+Firebase
+Es6
+Webpack
+Mysql
+Node.js
+Express.js
+```
+>>>>>>> 64ca58ac5602da25dbacd253e1599cc9ad5f38c1
 ## How to run
 
 ```
