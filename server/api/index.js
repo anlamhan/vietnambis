@@ -1,9 +1,9 @@
-let jwtAuth = require('../middleware/jwtAuth')
+//let jwtAuth = require('../middleware/jwtAuth')
 
 module.exports = app => {
 
     //chan dang nhap
-    app.use('/api', jwtAuth)
+    //app.use('/api', jwtAuth)
 
     app.get('/api', (req, res) => {
         res.json({ message: 'Welcome to our APIs！' });

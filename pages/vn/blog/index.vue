@@ -10,14 +10,9 @@
           <article v-for="post in api_posts" :key="post.title">   
        <a :href="`/vn/blog/${post.slug}.html`">{{ post.title }}</a>                     
         <div class="desc">{{post.description}}</div>        
-      </article>
-
-     <article v-for="post in posts" :key="post.title">   
-       <a :href="`/vn/blog/${post.slug}.html`">{{ post.title }}</a>                     
-        <div class="desc">{{post.meta_description}}</div>        
-      </article> 
+      </article>     
   </transition-group>
-        <vue-page :total="count" :page="page" path="/vn/blog/" model="link"></vue-page>
+        <!-- <vue-page :total="count" :page="page" path="/vn/blog/" model="link"></vue-page> -->
         </div>
     </div>
 </div> 
@@ -32,18 +27,14 @@ export default {
   async asyncData({ params, error }) {   
     let page = parseInt(params.id) || 0
     var host = process.env.baseUrl;    
-    let [apiRes, postRes, provinceRes, countRes] = await Promise.all([
-      axios.get(`http://cms.vietnambis.com/posts`),
-      axios.get(`${host}/api/post/page/${page}?scope=published`),
-      axios.get(`${host}/api/province/list`),      
-      axios.get(`${host}/api/post/count/0`)
+    let [apiRes, provinceRes] = await Promise.all([
+      axios.get(`${host}/api/strapi/posts`),      
+      axios.get(`${host}/api/province/list`)      
     ]).catch(err => {
       error({ statusCode: 400, message: err })
     })
     return {                       
-      provinces: provinceRes.data.list,
-      posts: postRes.data.list,
-      count: countRes.data.result,
+      provinces: provinceRes.data.list,      
       api_posts: apiRes.data,
       page      
     }

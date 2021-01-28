@@ -13,7 +13,7 @@ const elasticsearch = require('elasticsearch');
 //app.use(bodyParser.json());
 
 const client = new elasticsearch.Client({
-    host: '124.158.9.210:9201',
+    host: '27.72.104.59:9200',
     //host: 'localhost:9200',
     log: 'error'
  });

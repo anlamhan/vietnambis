@@ -43,15 +43,26 @@ module.exports = {
    modules: [
       //  ['@nuxtjs/html-minifier', { log: 'once', logHtml: true }]   
       '@nuxtjs/component-cache',
-
+      '@nuxtjs/strapi',//https://strapi.nuxtjs.org/
+      '@nuxtjs/proxy',   
     // With options
     ['@nuxtjs/component-cache', {
       max: 10000,
       maxAge: 1000 * 60 * 60
     }],
     '@nuxtjs/sitemap'  
-    ]
-   ,
+    ],
+    proxy: {//theo huong dan https://strapi.nuxtjs.org/proxy/
+      '/api/strapi': {
+        target: 'http://localhost:1337',
+        pathRewrite: {
+          '^/api/strapi': '/' //rewrite /api/strapi to http://localhost:1337
+        }
+      }
+    },
+    strapi: {
+      url: '/api/strapi'
+    },
    sitemap: {     
     path: '/sitemapindex.xml',
     hostname: 'https://vietnambis.com',

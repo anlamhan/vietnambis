@@ -3,7 +3,7 @@ const fs = require('fs');
 //let businessSys = require('../service/BusinessSys');
 
 const client = new elasticsearch.Client({
-    hosts: [ 'http://124.158.9.210:9201']
+    hosts: [ 'http://27.72.104.59:9200']
     //hosts: [ 'http://localhost:9200']
 });
 

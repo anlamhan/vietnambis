@@ -19,7 +19,7 @@
 
 <script>
 import axios from 'axios'
-import timeago from 'timeago.js'
+//import timeago from 'timeago.js'
 //import hljs from 'highlight.js'
 //let marked = require('marked');
 

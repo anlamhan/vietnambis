@@ -1,4 +1,4 @@
-let jwt = require('jwt-simple')
+//let jwt = require('jwt-simple')
 let moment = require('moment')
 let jwtSecret = require('../util/server.config').jwtSecret
 
@@ -20,12 +20,12 @@ let auth = (user, callback) => {
         if (user.length === 1) {            
             let expires = moment().add(7, 'days').valueOf();
 
-            let token = jwt.encode({
-                uid: user[0].id,
-                exp: expires
-            }, jwtSecret)
+            // let token = jwt.encode({
+            //     uid: user[0].id,
+            //     exp: expires
+            // }, jwtSecret)
 
-            return callback({ code: 200, message: 'success', token: token });
+            return callback({ code: 200, message: 'success', token: null });
         }
         callback({ code: 404, message: '登陆失败' });
     });

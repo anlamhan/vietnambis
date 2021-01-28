@@ -5,22 +5,21 @@
       <div class="poster" v-if="post.image" :style="{backgroundImage:'url('+post.image+')'}"></div>
       <div class="title"><h1>{{post.title}}</h1></div>
       <div class="info">
-        <p>Ngày cập nhật：{{post.updated_at}}</p>
-        <p v-if="post.tags && post.tags.length > 0">
-          Tags：
-          <span v-for="tag in post.tags" :key="tag.tagId">{{tag.name}}</span>
-        </p>
+        <p>Ngày cập nhật：{{new Date(post.published_at).toLocaleString('vi-VN')}} </p>        
       </div>
       <div class="content">
         <div v-html="post.html" class="md"></div>
-      </div>
+        <p v-if="post.categories && post.categories.length > 0">
+          Chuyên mục：
+          <span v-for="cat in post.categories" :key="cat.id">{{cat.Title}}</span>
+        </p>
+      </div>      
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import timeago from 'timeago.js'
 //import hljs from 'highlight.js'
 //import hljs from 'highlight.js/lib/highlight.js'
 let marked = require('marked');
@@ -40,71 +39,58 @@ marked.setOptions({
  });
 
 export default {
-  layout: 'vn',
+  layout: 'vn',  
   asyncData({ params, error }) {  
-    //console.log(params.slug);
-    var n = params.slug == undefined ? '' : params.slug.lastIndexOf(".");
-    var slug = params.slug == undefined ? '' : params.slug.substring(0,n);
-    if(slug=='tra-cuu-ma-so-thue-ca-nhan-tncn'|| slug=='cach-tra-cuu-ma-so-thue-doanh-nghiep')
-    {
-    var host = process.env.baseUrl;        
-    return axios.get(`${host}/api/post/detailBySlug/` + slug).then((res) => {
-      
-      if (res.data.code === 404) {
-        error({ statusCode: 404, message: 'Not Found This Post' });
-      }
-      
-      var post = res.data.list[0];      
-      console.log(post)
-      post.html = marked(post.markdown);      
-      return { post, slug }
-    }).catch((err) => {
-      error({ statusCode: 404, message: err.message })
-    })
-    }
-    else
-    {
-      return axios.get(`http://localhost:1337/posts?slug=` + slug).then((res) => {
-      
-      if (res.data.code === 404) {
-        error({ statusCode: 404, message: 'Not Found This Post' });
-      }
-      
-      var post = res.data[0];      
-      post.html = marked(post.content);
-      return { post, slug }
-    }).catch((err) => {
-      error({ statusCode: 404, message: err.message })
-    })
     
-    }
+    var n = params.slug == undefined ? '' : params.slug.lastIndexOf(".");
+    var slug = params.slug == undefined ? '' : params.slug.substring(0,n); 
+    var host = process.env.baseUrl;   
+      return axios.get(`${host}/api/strapi/posts?slug=` + slug,
+      ).then((res) => {      
+      if (res.data.code === 404) {
+        error({ statusCode: 404, message: 'Not Found This Post' });
+      }      
+      var post = res.data[0];                
+      post.html = marked(post.content);      
+      if(post.thumbnail && post.thumbnail.length > 0)
+      {
+        post.image_url = post.thumbnail[0].url
+      }
+      //post.published_ago = format(post.published_at, 'vi');   
+      return { post, slug }
+    }).catch((err) => {
+      error({ statusCode: 404, message: err.message })
+    })    
   },
   head() {
     return {
       title: this.post.title,
       meta: [
-        { hid: 'description', name: 'description', content: this.post.meta_description },
-        { name: 'keywords', content: this.keywords.join(',') }
+        { hid: 'description', name: 'description', content: this.post.description },
+        { name: 'keywords', content: this.keywords.join(',') },
+        { name: 'twitter:card', value: 'summary' },
+        { name: 'twitter:url', content: 'https://vietnambis.com/vn/blog/' + this.post.slug +'.html' },
+        { name: 'twitter:title', content:this.post.title},
+        { name: 'twitter:description', content:this.post.description},
+        { name: 'twitter:image', content:`http://cms.vietnambis.com`+this.post.image_url},
+        { name: 'twitter:site', content:'@vietnambis'},
+        { name: 'twitter:creator', content:'@vietnambis'},
+        { property: 'og:url', content: 'https://vietnambis.com/vn/blog/' + this.post.slug +'.html' },
+        { property: 'og:title', content:this.post.title},
+        { property: 'og:description', content:this.post.description},        
+        { property: 'og:type', content:'article'},
+        { property: 'og:site_name', content:'Vietnam BIS'}
       ]
     }
   },
   computed: {
     keywords() {
       let keywords = [];
-       if(this.slug=='tra-cuu-ma-so-thue-ca-nhan-tncn'|| this.slug=='cach-tra-cuu-ma-so-thue-doanh-nghiep')
-     {
-       this.post.tags.forEach(function (element) {
-         keywords.push(element.name)
-       });
-     }
-     else
-     {
-      //  this.post.categories.forEach(function (element) {
-      //    keywords.push(element.name)
-      //  });
-      console.log(this.post.content);
-      return keywords
-     }
+     
+        this.post.categories.forEach(function (element) {
+          keywords.push(element.Title)
+        });
+      //console.log(this.post.content);
       return keywords
     }
   }
