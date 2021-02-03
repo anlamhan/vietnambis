@@ -3,12 +3,12 @@ const fs = require('fs');
 //let businessSys = require('../service/BusinessSys');
 
 const client = new elasticsearch.Client({
-    hosts: [ 'http://27.72.104.59:9200']
+    hosts: [ 'http://192.168.1.3:9200']
     //hosts: [ 'http://localhost:9200']
 });
 
  client.indices.create({
-     index: 'vietnambis'
+     index: 'vietnambusinesses'
  }, function(error, response, status) {
      if (error) {
          console.log(error);
@@ -59,79 +59,23 @@ var con = mysql.createConnection({
 
 con.connect(function(err) {
   if (err) throw err;
-  // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id <200000", function (err, result, fields) {
-  //   if (err) throw err;    
-  //   bulkIndex('vietnambis', 'characters_list', result);
-  // });
-  // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=200000 and id <400000", function (err, result, fields) {
-  //   if (err) throw err;    
-  //   bulkIndex('vietnambis', 'characters_list', result);
-  // });
-  // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=400000 and id <600000", function (err, result, fields) {
-  //   if (err) throw err;    
-  //   bulkIndex('vietnambis', 'characters_list', result);
-  // });
-  //  con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=600000 and id <800000", function (err, result, fields) {
-  //    if (err) throw err;    
-  //    bulkIndex('vietnambis', 'characters_list', result);
-  //  });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=800000 and id <900000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=900000 and id <1000000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1000000 and id <1100000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
-    //  con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1100000 and id <1300000", function (err, result, fields) {
-    //    if (err) throw err;    
-    //    bulkIndex('vietnambis', 'characters_list', result);
-    //  });
-
-    //  con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1450000 and id <1500000", function (err, result, fields) {
-    //    if (err) throw err;    
-    //    bulkIndex('vietnambis', 'characters_list', result);
-    //  });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1500000 and id <1550000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1550000 and id <1600000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1600000 and id <1650000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1650000 and id <1700000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1700000 and id <1750000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
-    // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1800000", function (err, result, fields) {
-    //   if (err) throw err;    
-    //   bulkIndex('vietnambis', 'characters_list', result);
-    // });
+  
     // con.query("SELECT id, slug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number FROM businesses where id >=1400000 and id <1500000", function (err, result, fields) {
     //   if (err) throw err;    
     //   bulkIndex('vietnambis', 'characters_list', result);
     // });
+    //1. backup database ve local
+    //2. dem so luong total bussiness
+    //3. chia cho 1000 duoc bao nhieu thay cho duoi day
+    //4. chay len node elasticsearch.js
     var pre=1; var post = 1;
-    for(var i = 1; i<=1890; i++)
+    for(var i = 1; i<=2156; i++)
     {
      post=1000*i;
      pre = post - 1000;
     con.query("SELECT id, slug, vnslug, english_name, vietnamese_name, full_name, tax_id, english_address, province_id, district_id, commune_id, registration_number, legal_representative, vn_legal_representative FROM businesses where id >="+pre+ " and id <" + post, function (err, result, fields) {
        if (err) throw err;    
-       bulkIndex('vietnambis', 'characters_list', result);
+       bulkIndex('vietnambusinesses', 'characters_list', result);
     });
   }
 });

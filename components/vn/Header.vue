@@ -1,25 +1,43 @@
 <template>  
-  <header class="navbar">
-    <div class="container">
-        <div class="brand-name">
-          <a href="/"><img src="../../assets/img/logo.png" alt="Vietnam Bis" class="logo" /></a>            
-        </div>
-        <div class="drawer-toggle" role="button" @click="$store.dispatch('nav/toggleSidebar')">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>        
-        <div class="app-links">        
-            <app-links></app-links>            
-        </div>
-      </div>
+  <header class="navbar">    
+      <Navbar      
+      :navLinks="[
+        {
+          name: 'Trang Chủ',
+          link: '/',
+          dropdown: false,
+        },
+        { name: 'Tìm doanh nghiệp', link: '/vn/doanh-nghiep', dropdown: false },
+        { name: 'Blog', link: '/vn/blog', dropdown: false },
+        { name: 'Giới thiệu', link: '/vn/gioi-thieu', dropdown: false },
+
+        {
+          name: 'Liên hệ',
+          link: '/vn/lien-he',
+           dropdown: false,
+          /*dropdownLinks: [ 
+            { name: 'A', link: '/pA', dropdown: false },
+            { name: 'B', link: '/pB', dropdown: false },
+          ], */
+        },
+        {
+          name: 'Tiếng Anh',
+          link: '/en',
+          dropdown: false,
+          /* dropdownLinks: [ 
+            { name: 'C', link: '/pA', dropdown: false },
+            { name: 'D', link: '/pB', dropdown: false },
+          ], */
+        },
+      ]"
+    />
+    <!-- </div> -->
   </header>
 </template>
 <script>
-
-    import AppLinks from '~/components/vn/appLinks'
+import Navbar from '~/components/Navbar'
 export default {
-    components: { AppLinks }
+    components: { Navbar }
 }
 </script>
 <style scoped>
@@ -28,7 +46,7 @@ export default {
          grid-template: 60px / 1fr;        
         background-color: rgb(38, 50, 56);
     } 
-.navbar {
+/* .navbar {
     border-bottom: none;
     box-shadow: 0 4px 4px 0 rgba(0,0,0,.1);
 }
@@ -47,13 +65,13 @@ export default {
 .navbar {
     padding: .7rem 1.5rem;
     line-height: 2.2rem;
-}
+} */
 user agent stylesheet
 header {
     display: block;
 }
 
-.navbar .container {
+/* .navbar .container {
     display: flex;
 }
     .app-links{ 
@@ -64,7 +82,7 @@ header {
     right: 1.5rem;
     top: .7rem;
     display: flex;
-    }
+    } */
 
     .brand-name {
         margin: 0 10px;
@@ -106,13 +124,13 @@ header {
   margin-right: 20px;
 }
 
-.nav {
+/* .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: rgb(38, 50, 56);
   font-size: 20px;
-}
+} */
 
 a {
   color: rgba(250, 250, 250, 0.4);
@@ -157,10 +175,10 @@ a:last-child {
   .site img {
     margin: 0 0 10px 0;
   }
-  .nav {
+  /* .nav {
     justify-content: center;
     font-size: 14px;
-  }
+  } */
 }
 @media (max-width: 767px) {
         header{

@@ -1,25 +1,41 @@
 <template>  
   <header class="navbar">
-    <div class="container">
-        <div class="brand-name">
-          <a href="/en"><img src="../assets/img/logo.png" alt="Vietnam Bis" class="logo" /></a>            
-        </div>
-        <div class="drawer-toggle" role="button" @click="$store.dispatch('nav/toggleSidebar')">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>        
-        <div class="app-links">        
-            <app-links></app-links>            
-        </div>
-      </div>
+    <Navbar      
+      :navLinks="[
+        {
+          name: 'Home',
+          link: '/en',
+          dropdown: false,
+        },
+        { name: 'Find a Business', link: '/business', dropdown: false },        
+        { name: 'About', link: '/about', dropdown: false },
+        {
+          name: 'Contact',
+          link: '/contact/us',
+           dropdown: false,
+          /*dropdownLinks: [ 
+            { name: 'A', link: '/pA', dropdown: false },
+            { name: 'B', link: '/pB', dropdown: false },
+          ], */
+        },
+        {
+          name: 'Vietnamese',
+          link: '/',
+          dropdown: false,
+          /* dropdownLinks: [ 
+            { name: 'C', link: '/pA', dropdown: false },
+            { name: 'D', link: '/pB', dropdown: false },
+          ], */
+        },
+      ]"
+    />
   </header>
 </template>
 <script>
 
-import AppLinks from '~/components/appLinks'
+import Navbar from '~/components/Navbar'
 export default {
-    components: { AppLinks }
+    components: { Navbar }
 }
 </script>
 <style scoped>

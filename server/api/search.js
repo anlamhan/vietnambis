@@ -68,7 +68,7 @@ router.get('/search', function (req, res, next) {
               }
           }
          console.log(body)
-          client.search({index:'vietnambis', body:body, type:'characters_list'})
+          client.search({index:'vietnambusinesses', body:body, type:'characters_list'})
           .then(results => {
                   res.send(results.hits.hits);
               
@@ -111,7 +111,7 @@ router.get('/search', function (req, res, next) {
           }
           //console.log()
          
-          client.search({index:'vietnambis', body, type:'characters_list'})
+          client.search({index:'vietnambusinesses', body, type:'characters_list'})
           .then(results => {
                   res.send(results.hits.hits);
               
